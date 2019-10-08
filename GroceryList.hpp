@@ -10,7 +10,7 @@
 #include <vector>
 #include <initializer_list>
 
-#include "Gi.hpp"
+#include "GroceryItem.hpp"
 
 
 class GroceryList
