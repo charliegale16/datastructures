@@ -1,0 +1,53 @@
+
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <utility>
+#include <iterator>
+#include "GroceryItem.hpp"
+
+
+
+
+int main()
+{
+	std::cout << std::fixed << std::setprecision(2)
+		<< " Welcome to Kroger.Place grocery items into your shopping basket by entering each product's information.\n"
+		<< "enclose string entries in quotes, separate fields with comas/n"
+		<< "CTL - Z(Windows) or CTL - D(Linux) to quit \n";
+
+	std::vector<GroceryItem*> basket;
+	do
+	{
+		std::cout << "Enter UPC, Product Brand, Product Name, and Price each on a seperate line \n";
+
+
+		static GroceryItem item;
+
+		if (!(std::cin >> item)) break;
+
+		basket.push_back(new GroceryItem(std::move(item)));
+
+		std::cout << "Item added to basket: " << *basket.back() << std::endl;
+
+	} while (true);
+
+
+	std::cout << std::endl << "Here is an itemized list of the items in your basket:" << std::endl;
+
+	for (auto i = basket.crbegin(); i < basket.crend(); ++i) std::cout << **i;
+	
+
+	for (const auto p : basket) delete p;
+
+
+
+
+
+
+
+
+
+
+	return 0;
+}
