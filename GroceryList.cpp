@@ -27,9 +27,9 @@
 
 
 
-/*******************************************************************************
- **  Private implementations, types, and objects
- *******************************************************************************/
+//*******************************************************************************
+ //  Private implementations, types, and objects
+// *******************************************************************************
 // Calculate the size of the singly linked list on demand
 std::size_t GroceryList::groceries_sl_list_size() const
 {
@@ -39,7 +39,17 @@ std::size_t GroceryList::groceries_sl_list_size() const
     /// number of elements visited.  The STL's std::distance() function does that, or you can write your own loop.
     
     
-    return std::distance(_groceries_sl_list.begin(), _groceries_sl_list.end());
+    auto count = 0;
+    
+    for(auto i=groceries_sl_list.begin(); i!= groceries_sl_list.end(); ++i)
+    {
+        ++ count;
+    }
+    return count;
+    
+    
+    
+    // return std::distance(_groceries_sl_list.begin(), _groceries_sl_list.end());
     
     /////////////////////// END-TO-DO ////////////////////////////
 }
@@ -124,9 +134,12 @@ GroceryList& GroceryList::operator+=(const std::initializer_list<GroceryItem>& r
     /// constructor above gives an example.  Use GroceryList::insert() to insert at the bottom.
     
     
-    for (const auto & item : rhs) insert(item, Position::BOTTOM);
+    for (const auto & item : rhs)
+    {
+        
+        insert(item, Position::BOTTOM);
     
-    
+    }
     /////////////////////// END-TO-DO ////////////////////////////
     
     // Verify the internal grocery list state is still consistent amongst the four containers
@@ -144,7 +157,12 @@ GroceryList& GroceryList::operator+=(const GroceryList& rhs)
     /// to traverse.  Walk the container you picked inserting its grocery items to the bottom of this grocery list. Use
     /// GroceryList::insert() to insert at the bottom.
     
-    for(const auto & item :rhs._groceries_sl_list) insert(item, Position::BOTTOM);
+    for(const auto & item :rhs._groceries_vector)
+    {
+        
+        insert(item, Position::BOTTOM);
+        
+    }
     
     /////////////////////// END-TO-DO ////////////////////////////
     
@@ -186,13 +204,25 @@ std::size_t GroceryList::find(const GroceryItem& item) const
     /// provides the find() function that is a perfect fit here, but you may also write your own loop.
     
     
-  if constexpr((true))
+ 
+
+    if (NULL)
   {
-      return std::find(_groceries_vector.cbegin(),_groceries_vector.cend(), item) - _groceries_vector.cbegin();
+      return std::find(_groceries_vector.begin(),_groceries_vector.end(), item) - _groceries_vector.begin();
   }
     else
     {
-        for(std::size_t offset = 0; offset < _groceries_vector.size(); ++offset) if(_groceries_vector[offset] == item) return offset;
+        for(auto otherItem = 0; otherItem < _groceries_vector.size(); ++otherItem)
+        {
+            
+            if(_groceries_vector[otherItem] == item)
+            {
+                return otherItem;
+                
+            }
+            
+        }
+        
         
         return _groceries_vector.size();
         
@@ -253,7 +283,7 @@ void GroceryList::insert(const GroceryItem& item, std::size_t offsetFromTop)    
         /// RationalArray::insert() in RationalArray.cpp in our Rational Number Case Study examples.
         
         
-        if (_groceries_array_size >= _groceries_array.size()) throw CapacityExceeded_ex("Capacity Exceeded");
+        if (_groceries_array_size >= _groceries_array.size()) throw CapacityExceeded_ex("No More Space!!");
        
         
         
@@ -354,12 +384,10 @@ void GroceryList::remove(std::size_t offsetFromTop)
         /// See function FixedVector<T>::erase() in FixedVector.hpp in our Sequence Container Implementation Examples, and
         /// RationalArray::remove() in RationalArray.cpp in our Rational Number Case Study examples.
         
-        std::move(_groceries_array.begin() + offsetFromTop + 1,
-                  _groceries_array.begin() + _groceries_array_size,
-                  _groceries_array.begin() + offsetFromTop);
-        
+        std::move(_groceries_array.begin() + offsetFromTop + 1,_groceries_array.begin() + _groceries_array_size,_groceries_array.begin() + offsetFromTop);
         
         --_groceries_array_size;
+        
         _groceries_array[_groceries_array_size] = {};
         
         
@@ -435,9 +463,14 @@ void GroceryList::moveToTop(const GroceryItem& item)
     /// If the item exists, then remove and reinsert it.  Else do nothing.  Use GroceryList::find() to determine if the grocery item
     /// exists in this grocery list.
     
-    if( auto offset = find(item); offset != size() )
+    auto exist = find(item);
+    
+    
+    if( exist != size() )
     {
-        remove( offset);
+        remove( exist);
+        
+        
         insert( item, Position::TOP);
         
         
@@ -542,3 +575,4 @@ bool operator!=(const GroceryList& lhs, const GroceryList& rhs) { return !(lhs =
 bool operator<=(const GroceryList& lhs, const GroceryList& rhs) { return !(rhs < lhs); }
 bool operator> (const GroceryList& lhs, const GroceryList& rhs) { return  (rhs < lhs); }
 bool operator>=(const GroceryList& lhs, const GroceryList& rhs) { return !(lhs < rhs); }
+
